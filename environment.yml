@@ -1,0 +1,9 @@
+name: gee-pull
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - earthengine-api
+  - geopandas
+  - geemap
+prefix: C:\Users\mattw\Miniconda3\envs\gee-pull
