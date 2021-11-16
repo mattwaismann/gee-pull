@@ -12,7 +12,7 @@ def cloud_score(image):
         return image
 
 
-def export_landsat_eight_images(glims_id, bounding_box, start_date,end_date, out_dir, cloudy_pixel_percentage):
+def export_landsat_eight_images(glims_id, bounding_box, start_date,end_date, out_dir, cloudy_pixel_percentage=50):
     
     global region
     region = ee.Geometry.Polygon(bounding_box)
@@ -32,12 +32,12 @@ def export_landsat_eight_images(glims_id, bounding_box, start_date,end_date, out
     for i,date in enumerate(dates):
        image = ee.Image(collection_list.get(i))
        geemap.ee_export_image(image,
-                             filename = os.path.join(out_dir,f"{glims_id}_{date}_Landsat8.tif".format(date)),
+                             filename = os.path.join(out_dir,f"{glims_id}_{date}_Landsat8.tif"),
                              scale = 30,
                              region = region,
                              file_per_band = False)
 
-def export_landsat_seven_images(glims_id,bounding_box, start_date,end_date, out_dir, cloudy_pixel_percentage):
+def export_landsat_seven_images(glims_id,bounding_box, start_date,end_date, out_dir, cloudy_pixel_percentage=50):
     
     global region
     region = ee.Geometry.Polygon(bounding_box)
@@ -56,13 +56,13 @@ def export_landsat_seven_images(glims_id,bounding_box, start_date,end_date, out_
     for i,date in enumerate(dates):
        image = ee.Image(collection_list.get(i))
        geemap.ee_export_image(image,
-                             filename = os.path.join(out_dir,f"{glims_id}_{date}_Landsat7.tif".format(date)),
+                             filename = os.path.join(out_dir,f"{glims_id}_{date}_Landsat7.tif"),
                              scale = 30,
                              region = region,
                              file_per_band = False)
 
 
-def export_landsat_five_images(glims_id,bounding_box, start_date,end_date, out_dir, cloudy_pixel_percentage):
+def export_landsat_five_images(glims_id,bounding_box, start_date,end_date, out_dir, cloudy_pixel_percentage=50):
     
     global region
     region = ee.Geometry.Polygon(bounding_box)
@@ -80,9 +80,21 @@ def export_landsat_five_images(glims_id,bounding_box, start_date,end_date, out_d
     print("Number of images in this collection: ", collection_list.size().getInfo())
    
     for i,date in enumerate(dates):
-       image = ee.Image(collection_list.get(i))
-       geemap.ee_export_image(image,
-                             filename = os.path.join(out_dir,f"{glims_id}_{date}_Landsat5.tif".format(date)),
-                             scale = 30,
-                             region = region,
-                             file_per_band = False)
+        print(date)
+        image = ee.Image(collection_list.get(i))
+        geemap.ee_export_image(image,
+                                filename = os.path.join(out_dir,f"{glims_id}_{date}_Landsat5.tif"),
+                                scale = 30,
+                                region = region,
+                                file_per_band = False)
+
+def export_nasa_dems(glims_id, bounding_box, out_dir):
+    
+    region = ee.Geometry.Polygon(bounding_box)
+    image = ee.Image("NASA/NASADEM_HGT/001")
+    image = image.clip(region)
+    
+    geemap.ee_export_image(image,
+                          filename = os.path.join(out_dir, f"{glims_id}_DEM.tif"),
+                          scale = 30,
+                          region = region)
